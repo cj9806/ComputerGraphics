@@ -15,6 +15,7 @@ public class CodePolygon : MonoBehaviour
         //createPentagon(mesh);
         mesh.vertices = GenerateVerticies();
         mesh.triangles = GenerateIndices();
+        mesh.normals = GenerateNorms();
         mesh.uv = GenerateUVs();
         var filter = GetComponent<MeshFilter>();
         filter.mesh = mesh;
