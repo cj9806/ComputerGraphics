@@ -23,6 +23,8 @@ public class SamplePlayerCharacter : MonoBehaviour
     private float minPitch = -26;
     private float maxPitch = 60;
 
+    [HideInInspector] public bool punch;
+
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
@@ -32,7 +34,6 @@ public class SamplePlayerCharacter : MonoBehaviour
         Vector2 moveInput = playerInput.currentActionMap["Move"].ReadValue<Vector2>();
         Vector3 newMovInp = new Vector3(moveInput.x, 0, moveInput.y);
         newMovInp = transform.rotation * newMovInp;
-        Debug.Log(newMovInp);
         // send inputs to motor
         motor.MoveInput(newMovInp);
         if (playerInput.currentActionMap["Jump"].ReadValue<float>() == 1)
@@ -55,5 +56,8 @@ public class SamplePlayerCharacter : MonoBehaviour
         animator.SetFloat("Horizontal speed", moveInput.x);
 
     }
-    //void OnMove() { }        
+    void OnFire(InputValue input)
+    {
+        punch = true;
+    }
 }

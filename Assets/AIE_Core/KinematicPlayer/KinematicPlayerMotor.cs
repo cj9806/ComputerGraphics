@@ -141,6 +141,7 @@ public class KinematicPlayerMotor : MonoBehaviour, IKinematicMotor
     }
     public void OnFinishMove(ref Vector3 curPosition, ref Vector3 curVelocity)
     {
+        
         // Ground Adhesion
 
         // early exit if we're already grounded or jumping

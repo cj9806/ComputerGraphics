@@ -16,15 +16,16 @@ public class KinematicBody : MonoBehaviour
     [Header("Body Definition")]
 #pragma warning disable 0649 // Assigned in Unity inspector
     [SerializeField]
-    private BoxCollider col;
-    public BoxCollider BodyCollider => col;
+    private CapsuleCollider col;
+    public CapsuleCollider BodyCollider => col;
     [SerializeField]
     private Rigidbody rbody;
 #pragma warning restore 0649 // Assigned in Unity inspector
     /// <summary>
     /// Size of the box body in local space
     /// </summary>
-    public Vector3 LocalBodySize => col.size;
+    public float LocalRadius => col.radius;
+    public float LocalHeight => col.height;
     /// <summary>
     /// Minimum desired distance between nearby surfaces and the surface of this body
     /// </summary>
@@ -32,7 +33,8 @@ public class KinematicBody : MonoBehaviour
     /// <summary>
     /// Size of the box body in local space inclusive of the contact offset
     /// </summary>
-    public Vector3 LocalBodySizeWithSkin => col.size + Vector3.one * contactOffset;
+    public float LocalRadiusWithSkin => col.radius +  contactOffset;
+    public float LocalHeigthWithSkin => col.radius + contactOffset;
     public Vector3 GetLocalOffsetToCenter()
     {
         return col.center;
@@ -44,7 +46,7 @@ public class KinematicBody : MonoBehaviour
     /// <summary>
     /// Position of the feet (aka bottom) of the body
     /// </summary>
-    public Vector3 FootPosition => transform.TransformPoint(col.center + Vector3.down * col.size.y/2.0f);
+    public Vector3 FootPosition => transform.TransformPoint(col.center/* + Vector3.down * col.size.y/2.0f*/) - new Vector3();
     /// <summary>
     /// Offset from the pivot of the body to the feet
     /// </summary>
@@ -65,6 +67,8 @@ public class KinematicBody : MonoBehaviour
     
     public Vector3 InternalVelocity { get; private set; }
     public Vector3 Velocity { get; private set; }
+
+    public LayerMask collisionMask;
 
     public void CollideAndSlide(Vector3 bodyPosition, Vector3 bodyVelocity, Collider other)
     {
@@ -88,6 +92,7 @@ public class KinematicBody : MonoBehaviour
             other.transform.rotation,
             out var mtv,
             out var pen);
+        
 
         if (isOverlap)
         {
@@ -95,23 +100,36 @@ public class KinematicBody : MonoBehaviour
             motor.OnMoveHit(ref bodyPosition, ref bodyVelocity, other, mtv, pen);
         }
     }
+    //---------TERRY CODE BUILT FOR BOX COLLIDERS----------
+    //public Collider[] Overlap(Vector3 bodyPosition, int layerMask = ~0, QueryTriggerInteraction queryMode = QueryTriggerInteraction.UseGlobal)
+    //{
+    //    bodyPosition = GetCenterAtBodyPosition(bodyPosition);
+    //    return Physics.OverlapBox(bodyPosition, LocalBodySize/2, rbody.rotation, layerMask, queryMode);
+    //}
     
-    public Collider[] Overlap(Vector3 bodyPosition, int layerMask = ~0, QueryTriggerInteraction queryMode = QueryTriggerInteraction.UseGlobal)
+    //public Collider[] Overlap(Vector3 bodyPosition, Vector3 bodyHalfExtents, int layerMask = ~0, QueryTriggerInteraction queryMode = QueryTriggerInteraction.UseGlobal)
+    //{
+    //    bodyPosition = GetCenterAtBodyPosition(bodyPosition);
+    //    return Physics.OverlapBox(bodyPosition, bodyHalfExtents, rbody.rotation, layerMask);
+    //}
+    public Collider[] Overlap(CapsuleCollider collider, int layermask = ~0, QueryTriggerInteraction queryMode = QueryTriggerInteraction.UseGlobal)
     {
-        bodyPosition = GetCenterAtBodyPosition(bodyPosition);
-        return Physics.OverlapBox(bodyPosition, LocalBodySize/2, rbody.rotation, layerMask, queryMode);
-    }
-    
-    public Collider[] Overlap(Vector3 bodyPosition, Vector3 bodyHalfExtents, int layerMask = ~0, QueryTriggerInteraction queryMode = QueryTriggerInteraction.UseGlobal)
-    {
-        bodyPosition = GetCenterAtBodyPosition(bodyPosition);
-        return Physics.OverlapBox(bodyPosition, bodyHalfExtents, rbody.rotation, layerMask);
+        //the points are = to top/bottom of the capsule +- the radius
+        //top/bottom can be detirmined from collider.center +- 1/2 height;
+        Vector3 worldPos = transform.TransformPoint(collider.center);
+        Vector3 top = worldPos + new Vector3(0, (collider.height / 2)-col.radius, 0);
+        Vector3 bot = worldPos - new Vector3(0, (collider.height / 2)+col.radius, 0);
+        return Physics.OverlapCapsule(top,bot,collider.radius,layermask);
     }
     
     public RaycastHit[] Cast(Vector3 bodyPosition, Vector3 direction, float distance, int layerMask = ~0, QueryTriggerInteraction queryMode = QueryTriggerInteraction.UseGlobal)
     {
         bodyPosition = GetCenterAtBodyPosition(bodyPosition);
-        var allHits = Physics.BoxCastAll(bodyPosition, LocalBodySizeWithSkin/2, direction, rbody.rotation, distance, layerMask, queryMode);
+        //var allHits = Physics.BoxCastAll(bodyPosition, LocalBodySizeWithSkin/2, direction, rbody.rotation, distance, layerMask, queryMode);
+        Vector3 worldPos = transform.TransformPoint(col.center);
+        Vector3 top = worldPos + new Vector3(0, (col.height / 2) - col.radius, 0);
+        Vector3 bot = worldPos - new Vector3(0, (col.height / 2) + col.radius, 0);
+        var allHits = Physics.CapsuleCastAll(top, bot, col.radius, direction, distance);
 
         // TODO: this is terribly inefficient and generates garbage, please optimize this
         List<RaycastHit> filteredhits = new List<RaycastHit>(allHits);
@@ -153,15 +171,18 @@ public class KinematicBody : MonoBehaviour
         // depenetrate from overlapping objects
         //
 
-        Vector3 sizeOriginal = col.size;
-        Vector3 sizeWithSkin = col.size + Vector3.one * contactOffset;
+        float radiusOriginal = col.radius;
+        float radiusWithSkin = col.radius + contactOffset;
 
-        var candidates = Overlap(projectedPos, sizeWithSkin / 2);
+        float heightOriginal = col.height;
+        float heightWithSkin = col.height + contactOffset;
+
+        var candidates = Overlap(col,collisionMask);
 
         // HACK: since we can't pass a custom size to Physics.ComputePenetration (see below),
         //       we need to assign it directly to the collide prior to calling it and then
         //       revert the change afterwards
-        col.size = sizeWithSkin;
+        col.radius = radiusWithSkin;
         
         foreach (var candidate in candidates)
         {
@@ -169,7 +190,7 @@ public class KinematicBody : MonoBehaviour
         }
         
         // HACK: restoring size (see above HACK)
-        col.size = sizeOriginal;
+        col.radius = radiusOriginal;
         
         // callback: pre-processing move before applying 
         motor.OnFinishMove(ref projectedPos, ref projectedVel);
@@ -193,7 +214,7 @@ public class KinematicBody : MonoBehaviour
     {
         Gizmos.color = Color.cyan;
         Gizmos.matrix = Matrix4x4.TRS(transform.position, transform.rotation, Vector3.one);
-        Gizmos.DrawWireCube(col.center, col.size + Vector3.one * contactOffset);
+        //Gizmos.draw(col.center, col.size + Vector3.one * contactOffset);
     }
 }
 
