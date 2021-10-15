@@ -20,7 +20,7 @@ public class HandCollisionDetector : MonoBehaviour
     }
     private void OnCollisionEnter(Collision collision)
     {
-        if (playerCharacter.punch) 
+        if (playerCharacter.attack) 
         {
             col = collision;
             var enemyStats = col.gameObject.GetComponent<EnemyStats>();
@@ -28,7 +28,7 @@ public class HandCollisionDetector : MonoBehaviour
             enemyStats.health -= 2;
             if (enemyStats.health <= 0) col = null;
         }
-       
+        playerCharacter.attack = false;
     }
     private void OnCollisionExit(Collision collision)
     {

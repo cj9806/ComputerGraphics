@@ -12,6 +12,7 @@ public class SamplePlayerCharacter : MonoBehaviour
     [SerializeField] PlayerInput playerInput;
     // The motor we're controlling
     public KinematicPlayerMotor motor;
+    public ParticleSystem particle;
     public Animator animator;
     public Rigidbody rigidbody;
 
@@ -24,11 +25,16 @@ public class SamplePlayerCharacter : MonoBehaviour
     private float minPitch = -26;
     private float maxPitch = 60;
 
-    [HideInInspector] public bool punch;
+    [HideInInspector] public bool attack;
+    private bool landed;
+    private int activeWeapon;
 
+    [SerializeField] GameObject sword;
+    [SerializeField] InverseKinematics ikHandler;
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
+        activeWeapon = 0;
     }
     private void Update()
     {
@@ -55,10 +61,33 @@ public class SamplePlayerCharacter : MonoBehaviour
         animator.SetFloat("Speed",rigidbody.velocity.magnitude);
         animator.SetFloat("Forward speed", moveInput.y);
         animator.SetFloat("Horizontal speed", moveInput.x);
-
+        //state machine to handle the particles
+        if(motor.Grounded && !landed)
+        {
+            particle.Emit(10);
+        }
+        landed = motor.Grounded;
     }
     void OnFire(InputValue input)
     {
-        punch = true;
+        attack = true;
+        animator.SetBool("Attacking", true);
+    }
+    void OnSwitchWeapon(InputValue input)
+    {
+        
+        if (sword.activeSelf == false)
+        {
+            animator.SetLayerWeight(1, 0);
+            animator.SetLayerWeight(2, 1.0f);
+            ikHandler.unarmed = false;
+        }
+        else
+        {
+            animator.SetLayerWeight(1, 1.0f);
+            animator.SetLayerWeight(2, 0);
+            ikHandler.unarmed = true;
+        }
+        sword.SetActive(!sword.activeSelf);
     }
 }

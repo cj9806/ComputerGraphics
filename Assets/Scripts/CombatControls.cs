@@ -20,7 +20,7 @@ public class CombatControls : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(playerCharacter.punch == true && hCD.col != null)
+        if(playerCharacter.attack == true && hCD.col != null)
         {
             //look for collision
             Debug.Log(hCD.col.gameObject.name);

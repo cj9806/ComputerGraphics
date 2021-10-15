@@ -11,29 +11,31 @@ public class InverseKinematics : MonoBehaviour
     private bool retracted = true;
     private float weight;
     [SerializeField] SamplePlayerCharacter player;
+    public bool unarmed = true;
     private void OnAnimatorIK(int layerIndex)
     {
-        
-        //punch when told to
-        if (player.punch)
+        if (unarmed)
         {
-            anim.SetIKPositionWeight(AvatarIKGoal.RightHand, weight);
-            anim.SetIKPosition(AvatarIKGoal.RightHand, target.transform.position);
-            if(retracted)
-            weight += Time.fixedDeltaTime;
+            //punch when told to
+            if (player.attack)
+            {
+                anim.SetIKPositionWeight(AvatarIKGoal.RightHand, weight);
+                anim.SetIKPosition(AvatarIKGoal.RightHand, target.transform.position);
+                if (retracted)
+                    weight += Time.fixedDeltaTime;
+            }
+            //retract when fully extendend
+            if (weight >= 1) retracted = false;
+            if (!retracted)
+            {
+                weight -= Time.fixedDeltaTime;
+            }
+            if (!retracted && weight < 0)
+            {
+                player.attack = false;
+                retracted = true;
+            }
+            //tell that you can punch again
         }
-        //retract when fully extendend
-        if (weight >= 1) retracted = false;
-        if (!retracted)
-        {
-            weight -= Time.fixedDeltaTime;
-        }
-        if(!retracted&& weight < 0)
-        {
-            player.punch = false;
-            retracted = true;
-        }
-        //tell that you can punch again
     }
-    
 }
