@@ -17,6 +17,7 @@ public class SamplePlayerCharacter : MonoBehaviour
 
     //mouse contols
     [SerializeField]GameObject cameraRotater;
+    
     public float rotationSpeed;
     public float lookMax;
     private float pitchControl = 0f;
@@ -39,7 +40,7 @@ public class SamplePlayerCharacter : MonoBehaviour
         if (playerInput.currentActionMap["Jump"].ReadValue<float>() == 1)
         {
             motor.JumpInput();
-
+            
         }
 
         Vector2 lookInput = playerInput.currentActionMap["Look"].ReadValue<Vector2>();
