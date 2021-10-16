@@ -11,7 +11,15 @@ public class InverseKinematics : MonoBehaviour
     private bool retracted = true;
     private float weight;
     [SerializeField] SamplePlayerCharacter player;
+    [SerializeField] Camera mainCam;
     public bool unarmed = true;
+    //update is here to handle rotation
+    private void Update()
+    {
+        if (anim.GetFloat("Speed") > 2)
+            transform.localRotation = Quaternion.RotateTowards(transform.rotation, player.cameraYawRotater.transform.rotation, 3f);
+    }
+
     private void OnAnimatorIK(int layerIndex)
     {
         if (unarmed)
@@ -38,4 +46,5 @@ public class InverseKinematics : MonoBehaviour
             //tell that you can punch again
         }
     }
+
 }

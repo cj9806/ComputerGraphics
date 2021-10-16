@@ -17,8 +17,8 @@ public class SamplePlayerCharacter : MonoBehaviour
     public Rigidbody rigidbody;
 
     //mouse contols
-    [SerializeField]GameObject cameraRotater;
-    
+    [SerializeField]GameObject cameraPitchRotater;
+    public GameObject cameraYawRotater;
     public float rotationSpeed;
     public float lookMax;
     private float pitchControl = 0f;
@@ -27,20 +27,19 @@ public class SamplePlayerCharacter : MonoBehaviour
 
     [HideInInspector] public bool attack;
     private bool landed;
-    private int activeWeapon;
 
     [SerializeField] GameObject sword;
     [SerializeField] InverseKinematics ikHandler;
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
-        activeWeapon = 0;
     }
     private void Update()
     {
         Vector2 moveInput = playerInput.currentActionMap["Move"].ReadValue<Vector2>();
+        
         Vector3 newMovInp = new Vector3(moveInput.x, 0, moveInput.y);
-        newMovInp = transform.rotation * newMovInp;
+        newMovInp = cameraYawRotater.transform.rotation * newMovInp;
         // send inputs to motor
         motor.MoveInput(newMovInp);
         if (playerInput.currentActionMap["Jump"].ReadValue<float>() == 1)
@@ -50,9 +49,12 @@ public class SamplePlayerCharacter : MonoBehaviour
         }
 
         Vector2 lookInput = playerInput.currentActionMap["Look"].ReadValue<Vector2>();
-        rigidbody.rotation = Quaternion.Euler(rigidbody.rotation.eulerAngles + new Vector3(0f, lookInput.x, 0));
+        //rigidbody.rotation = Quaternion.Euler(rigidbody.rotation.eulerAngles + new Vector3(0f, lookInput.x, 0));
         pitchControl = Mathf.Clamp(pitchControl - lookInput.y * rotationSpeed, minPitch, maxPitch);
-        cameraRotater.transform.localRotation = Quaternion.Euler(pitchControl, 0, 0);
+        cameraYawRotater.transform.localRotation = cameraYawRotater.transform.localRotation * Quaternion.AngleAxis(lookInput.x, Vector3.up);
+        cameraPitchRotater.transform.localRotation = Quaternion.Euler(pitchControl, 0, 0);
+        //get mouse postition
+        animator.SetLookAtPosition(cameraYawRotater.transform.forward);
         
 
 

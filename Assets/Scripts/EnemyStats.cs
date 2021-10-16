@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class EnemyStats : MonoBehaviour
 {
+    public GameObject player;
     public int health;
+    [SerializeField] Animator animator;
     // Start is called before the first frame update
     void Start()
     {
@@ -17,6 +19,13 @@ public class EnemyStats : MonoBehaviour
         if(health <= 0)
         {
             Destroy(this.gameObject);
+        }
+        transform.LookAt(player.transform.position);
+        float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
+
+        if(distanceToPlayer <= 2.1)
+        {
+            animator.SetBool("Attacking", true);
         }
     }
 }
