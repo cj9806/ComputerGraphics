@@ -8,8 +8,7 @@ public class EnemyStats : MonoBehaviour
     public GameObject player;
     public int health;
     [SerializeField] Animator animator;
-    [SerializeField] Rigidbody rigidbody;
-    [SerializeField] KinematicPlayerMotor motor;
+
     public Transform goal;
     private float ranFloat = 0;
     private float counter= 0;
@@ -18,16 +17,13 @@ public class EnemyStats : MonoBehaviour
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-        
     }
 
     // Update is called once per frame
-    void FixedUpdate()
-    {
-        agent.destination = goal.position;
-    }
+
     void Update()
     {
+        agent.destination = goal.position;
         if(health <= 0)
         {
             Destroy(this.gameObject);
@@ -53,8 +49,15 @@ public class EnemyStats : MonoBehaviour
                 }
             }
         }
-        animator.SetFloat("Speed", rigidbody.velocity.magnitude);
-        animator.SetBool("Grounded", motor.Grounded);
+        //find forward and right velocity
+        Vector3 localVelocity = transform.InverseTransformVector(agent.velocity);
 
+        //find if touching ground or nor
+
+        
+        //update animator
+        animator.SetFloat("Speed", agent.velocity.magnitude);
+        animator.SetFloat("Forward speed", localVelocity.z);
+        animator.SetFloat("Horizontal speed", localVelocity.x);
     }
 }

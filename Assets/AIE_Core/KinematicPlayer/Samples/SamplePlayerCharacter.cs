@@ -54,7 +54,7 @@ public class SamplePlayerCharacter : MonoBehaviour
         cameraYawRotater.transform.localRotation = cameraYawRotater.transform.localRotation * Quaternion.AngleAxis(lookInput.x, Vector3.up);
         cameraPitchRotater.transform.localRotation = Quaternion.Euler(pitchControl, 0, 0);
         //get mouse postition
-        animator.SetLookAtPosition(cameraYawRotater.transform.forward);
+        //animator.SetLookAtPosition(cameraYawRotater.transform.forward);
         
 
 
