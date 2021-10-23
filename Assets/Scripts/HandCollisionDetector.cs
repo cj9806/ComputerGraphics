@@ -23,7 +23,7 @@ public class HandCollisionDetector : MonoBehaviour
         if (playerCharacter.attack) 
         {
             col = collision;
-            var enemyStats = col.gameObject.GetComponent<EnemyStats>();
+            var enemyStats = col.gameObject.GetComponentInParent<EnemyStats>();
             if(enemyStats!=null)
             enemyStats.health -= 2;
             if (enemyStats.health <= 0) col = null;

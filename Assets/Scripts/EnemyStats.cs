@@ -17,6 +17,7 @@ public class EnemyStats : MonoBehaviour
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
+        agent.speed = 0;
     }
 
     // Update is called once per frame
@@ -31,7 +32,6 @@ public class EnemyStats : MonoBehaviour
         Vector3 lookAt = new Vector3(player.transform.position.x, transform.position.y, player.transform.position.z);
         transform.LookAt(lookAt);
         float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
-
         if(distanceToPlayer <= 2.1)
         {
             if(ranFloat == 0)
