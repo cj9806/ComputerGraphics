@@ -7,6 +7,7 @@ public class HandCollisionDetector : MonoBehaviour
     [HideInInspector]
     public Collision col;
     [SerializeField] SamplePlayerCharacter playerCharacter;
+    private EnemyStats enemyStats;
     // Start is called before the first frame update
     void Start()
     {
@@ -16,19 +17,23 @@ public class HandCollisionDetector : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (enemyStats != null && playerCharacter.attack)
+        {
+            if (playerCharacter.sword.activeSelf == false)
+                enemyStats.health -= 2;
+            else enemyStats.health -= 10;
+            if (enemyStats.health <= 0) col = null;
+        }
     }
     private void OnCollisionEnter(Collision collision)
     {
-        if (playerCharacter.attack) 
+        if (playerCharacter.attack)
         {
             col = collision;
-            var enemyStats = col.gameObject.GetComponentInParent<EnemyStats>();
-            if(enemyStats!=null)
-            enemyStats.health -= 2;
-            if (enemyStats.health <= 0) col = null;
+            enemyStats = col.gameObject.GetComponentInParent<EnemyStats>();
+
+            playerCharacter.attack = false;
         }
-        playerCharacter.attack = false;
     }
     private void OnCollisionExit(Collision collision)
     {

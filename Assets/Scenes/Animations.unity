@@ -1115,7 +1115,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 129327666}
-  health: 20
+  health: 100
   animator: {fileID: 1746685884}
   goal: {fileID: 129327667}
 --- !u!114 &698918344
@@ -2176,9 +2176,9 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1562457921}
   m_Direction: 0
   m_MinValue: 0
-  m_MaxValue: 20
+  m_MaxValue: 100
   m_WholeNumbers: 0
-  m_Value: 20
+  m_Value: 100
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -2308,6 +2308,38 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 301052145, guid: 6f929ab7fd7131446a037aa6c57c78e9, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 301052145, guid: 6f929ab7fd7131446a037aa6c57c78e9, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 373264743, guid: 6f929ab7fd7131446a037aa6c57c78e9, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 373264743, guid: 6f929ab7fd7131446a037aa6c57c78e9, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1804568075, guid: 6f929ab7fd7131446a037aa6c57c78e9, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1804568075, guid: 6f929ab7fd7131446a037aa6c57c78e9, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4319130943495982033, guid: 6f929ab7fd7131446a037aa6c57c78e9, type: 3}
+      propertyPath: mana
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4319130943495982033, guid: 6f929ab7fd7131446a037aa6c57c78e9, type: 3}
+      propertyPath: stamina
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 4319130943495982038, guid: 6f929ab7fd7131446a037aa6c57c78e9, type: 3}
       propertyPath: m_Name
       value: Player

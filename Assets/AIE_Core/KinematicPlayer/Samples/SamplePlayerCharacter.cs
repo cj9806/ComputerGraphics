@@ -9,6 +9,7 @@ using UnityEngine.InputSystem;
 /// </summary>
 public class SamplePlayerCharacter : MonoBehaviour
 {
+    public Vector3 startingPoint;
     [SerializeField] PlayerInput playerInput;
     // The motor we're controlling
     public KinematicPlayerMotor motor;
@@ -24,15 +25,31 @@ public class SamplePlayerCharacter : MonoBehaviour
     private float pitchControl = 0f;
     private float minPitch = -26;
     private float maxPitch = 60;
+    private Mouse mouse;
 
     [HideInInspector] public bool attack;
     private bool landed;
 
-    [SerializeField] GameObject sword;
+    public GameObject sword;
     [SerializeField] InverseKinematics ikHandler;
+
+    public Camera camera;
+    private bool blinkAiming = false;
+    private bool blink = false;
+    public float maxBlinkDistance;
+    public LayerMask blinkmask;
+
+    //player stats
+    [Header("Player Stats")]
+    public float health = 100;
+    public float stamina;
+    public float mana;
+    [SerializeField] HudController hud;
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = true;
+        mouse = Mouse.current;
     }
     private void Update()
     {
@@ -55,29 +72,68 @@ public class SamplePlayerCharacter : MonoBehaviour
         cameraPitchRotater.transform.localRotation = Quaternion.Euler(pitchControl, 0, 0);
         //get mouse postition
         //animator.SetLookAtPosition(cameraYawRotater.transform.forward);
+
+        //blink handling
+        if (blinkAiming && mana > 25)
+        {
+            Ray ray = camera.ScreenPointToRay(mouse.position.ReadValue());
+            bool hitGround = Physics.Raycast(ray, out RaycastHit hitInfo, maxBlinkDistance,blinkmask,QueryTriggerInteraction.Ignore);
+            Vector3 blinkPoint;
+            if (hitGround) blinkPoint = ray.origin + ray.direction * hitInfo.distance;
+            else blinkPoint = ray.origin + ray.direction * maxBlinkDistance;
+            Debug.Log(blinkPoint);
+            particle.transform.position = blinkPoint;
+            particle.Emit(10);
+            if (blink)
+            {
+                Debug.Log("Blink");
+                transform.position = blinkPoint;
+                blinkAiming = false;
+                blink = false;
+                mana -= 25;
+            }
+        }
+        if(mana < 100)
+        {
+            mana += .05f;
+        }
         
-
-
         //animation handling
         animator.SetBool("Grounded",motor.Grounded);
         animator.SetFloat("Speed",rigidbody.velocity.magnitude);
         animator.SetFloat("Forward speed", moveInput.y);
         animator.SetFloat("Horizontal speed", moveInput.x);
-        //state machine to handle the particles
-        if(motor.Grounded && !landed)
+
+
+        //hupdate stats
+        if (stamina < 100)
+            stamina += .025f;
+        hud.health = health;
+        hud.stamina = stamina;
+        hud.mana = mana;
+        //this will make sure you cannat damage more than once per attack
+        //attack = animator.GetBool("Attacking");
+    }
+    private void FixedUpdate()
+    {
+        if (transform.position.y < -25)
         {
-            particle.Emit(10);
+            playerInput.transform.position = startingPoint;
+            rigidbody.velocity = Vector3.zero;
         }
-        landed = motor.Grounded;
     }
     void OnFire(InputValue input)
     {
-        attack = true;
-        animator.SetBool("Attacking", true);
+        if (!attack && stamina > 25)
+        {
+            attack = true;
+            animator.SetBool("Attacking", true);
+            stamina -= 25;
+        }
     }
     void OnSwitchWeapon(InputValue input)
     {
-        
+
         if (sword.activeSelf == false)
         {
             animator.SetLayerWeight(1, 0);
@@ -92,4 +148,13 @@ public class SamplePlayerCharacter : MonoBehaviour
         }
         sword.SetActive(!sword.activeSelf);
     }
+    void OnBlink(InputValue input)
+    {
+        if (mana >= 25)
+        {
+            if (input.Get<float>() == 1) blinkAiming = true;
+            if (input.Get<float>() == 0) blink = true;
+        }
+    }
+    
 }
