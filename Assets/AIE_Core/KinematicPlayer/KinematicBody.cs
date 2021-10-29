@@ -119,7 +119,7 @@ public class KinematicBody : MonoBehaviour
         Vector3 worldPos = transform.TransformPoint(collider.center);
         Vector3 top = worldPos + new Vector3(0, (collider.height / 2)-col.radius, 0);
         Vector3 bot = worldPos - new Vector3(0, (collider.height / 2)+col.radius, 0);
-        return Physics.OverlapCapsule(top,bot,collider.radius,layermask);
+        return Physics.OverlapCapsule(top,bot,collider.radius,layermask,queryMode);
     }
     
     public RaycastHit[] Cast(Vector3 bodyPosition, Vector3 direction, float distance, int layerMask = ~0, QueryTriggerInteraction queryMode = QueryTriggerInteraction.UseGlobal)
@@ -129,7 +129,7 @@ public class KinematicBody : MonoBehaviour
         Vector3 worldPos = transform.TransformPoint(col.center);
         Vector3 top = worldPos + new Vector3(0, (col.height / 2) - col.radius, 0);
         Vector3 bot = worldPos - new Vector3(0, (col.height / 2) + col.radius, 0);
-        var allHits = Physics.CapsuleCastAll(top, bot, col.radius, direction, distance);
+        var allHits = Physics.CapsuleCastAll(top, bot, col.radius, direction, distance,layerMask,queryMode);
 
         // TODO: this is terribly inefficient and generates garbage, please optimize this
         List<RaycastHit> filteredhits = new List<RaycastHit>(allHits);
@@ -177,7 +177,7 @@ public class KinematicBody : MonoBehaviour
         float heightOriginal = col.height;
         float heightWithSkin = col.height + contactOffset;
 
-        var candidates = Overlap(col,collisionMask);
+        var candidates = Overlap(col,collisionMask,QueryTriggerInteraction.Ignore);
 
         // HACK: since we can't pass a custom size to Physics.ComputePenetration (see below),
         //       we need to assign it directly to the collide prior to calling it and then

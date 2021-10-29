@@ -27,10 +27,12 @@ public class SamplePlayerCharacter : MonoBehaviour
     private float maxPitch = 60;
     private Mouse mouse;
 
-    [HideInInspector] public bool attack;
+    [HideInInspector] public bool attacking;
     private bool landed;
 
     public GameObject sword;
+    [HideInInspector]
+    public bool canAttack = true;
     [SerializeField] InverseKinematics ikHandler;
 
     public Camera camera;
@@ -81,12 +83,10 @@ public class SamplePlayerCharacter : MonoBehaviour
             Vector3 blinkPoint;
             if (hitGround) blinkPoint = ray.origin + ray.direction * hitInfo.distance;
             else blinkPoint = ray.origin + ray.direction * maxBlinkDistance;
-            Debug.Log(blinkPoint);
             particle.transform.position = blinkPoint;
             particle.Emit(10);
             if (blink)
             {
-                Debug.Log("Blink");
                 transform.position = blinkPoint;
                 blinkAiming = false;
                 blink = false;
@@ -111,8 +111,12 @@ public class SamplePlayerCharacter : MonoBehaviour
         hud.health = health;
         hud.stamina = stamina;
         hud.mana = mana;
-        //this will make sure you cannat damage more than once per attack
-        //attack = animator.GetBool("Attacking");
+        
+
+        if(health <= 0)
+        {
+            //gameover
+        }
     }
     private void FixedUpdate()
     {
@@ -121,12 +125,14 @@ public class SamplePlayerCharacter : MonoBehaviour
             playerInput.transform.position = startingPoint;
             rigidbody.velocity = Vector3.zero;
         }
+        //check to see if the attack animation is done playing before i can attack again
+        canAttack = !animator.GetBool("Attacking");
     }
     void OnFire(InputValue input)
     {
-        if (!attack && stamina > 25)
+        if (canAttack && stamina > 25)
         {
-            attack = true;
+            attacking = true;
             animator.SetBool("Attacking", true);
             stamina -= 25;
         }

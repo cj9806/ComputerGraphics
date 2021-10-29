@@ -17,26 +17,27 @@ public class HandCollisionDetector : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (enemyStats != null && playerCharacter.attack)
-        {
-            if (playerCharacter.sword.activeSelf == false)
-                enemyStats.health -= 2;
-            else enemyStats.health -= 10;
-            if (enemyStats.health <= 0) col = null;
-        }
+        
     }
     private void OnCollisionEnter(Collision collision)
     {
-        if (playerCharacter.attack)
+        //Debug.Log(collision.gameObject.name);
+        if (playerCharacter.attacking)
         {
-            col = collision;
-            enemyStats = col.gameObject.GetComponentInParent<EnemyStats>();
-
-            playerCharacter.attack = false;
+            enemyStats = collision.gameObject.GetComponentInParent<EnemyStats>();
+            if (playerCharacter.sword.activeSelf)
+            {
+                enemyStats.health -= 20;
+            }
+            else
+            {
+                enemyStats.health -= 2;
+            }
+            playerCharacter.attacking = false;
         }
     }
     private void OnCollisionExit(Collision collision)
     {
-        col = null;
+
     }
 }

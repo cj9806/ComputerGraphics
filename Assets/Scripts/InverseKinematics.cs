@@ -25,7 +25,7 @@ public class InverseKinematics : MonoBehaviour
         if (unarmed)
         {
             //punch when told to
-            if (player.attack)
+            if (player.attacking)
             {
                 anim.SetIKPositionWeight(AvatarIKGoal.RightHand, weight);
                 anim.SetIKPosition(AvatarIKGoal.RightHand, target.transform.position);
@@ -40,7 +40,7 @@ public class InverseKinematics : MonoBehaviour
             }
             if (!retracted && weight < 0)
             {
-                player.attack = false;
+                player.attacking = false;
                 retracted = true;
             }
             //tell that you can punch again

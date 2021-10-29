@@ -12,7 +12,12 @@ public class EnemyStats : MonoBehaviour
     public Transform goal;
     private float ranFloat = 0;
     private float counter= 0;
-    NavMeshAgent agent;
+    [HideInInspector] public NavMeshAgent agent;
+    public bool attacking;
+    private bool canAttack;
+    [HideInInspector] public bool onTheHunt = false;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -24,6 +29,7 @@ public class EnemyStats : MonoBehaviour
 
     void Update()
     {
+        canAttack = !animator.GetBool("Attcking");
         agent.destination = goal.position;
         if(health <= 0)
         {
@@ -32,22 +38,32 @@ public class EnemyStats : MonoBehaviour
         Vector3 lookAt = new Vector3(player.transform.position.x, transform.position.y, player.transform.position.z);
         transform.LookAt(lookAt);
         float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
-        if(distanceToPlayer <= 2.1)
+        if (onTheHunt)
         {
-            if(ranFloat == 0)
+            if (distanceToPlayer <= 4.2)
             {
-                ranFloat = Random.Range(1.0f, 3.0f);
-            }
-            else
-            {
-                counter += Time.deltaTime;
-                if(counter > ranFloat)
+                agent.speed = 0;
+                if (ranFloat == 0)
                 {
-                    animator.SetBool("Attacking", true);
-                    ranFloat = 0;
-                    counter = 0;
+                    ranFloat = Random.Range(1.0f, 3.0f);
                 }
-            }
+                else
+                {
+                    if (!animator.GetBool("Attacking")) counter += Time.deltaTime;
+                    if (counter > ranFloat)
+                    {
+                        agent.speed = 5;
+                        if (distanceToPlayer <= 2.1 && canAttack)
+                        {
+                            attacking = true;
+                            ranFloat = 0;
+                            counter = 0;
+                            animator.SetBool("Attacking", true);
+                        }
+                    }
+                }
+            } 
+            if (distanceToPlayer > 4.2 && agent.speed == 0) agent.speed = 5;
         }
         //find forward and right velocity
         Vector3 localVelocity = transform.InverseTransformVector(agent.velocity);
