@@ -46,9 +46,17 @@
                     "interactions": ""
                 },
                 {
-                    "name": "Blink",
+                    "name": "Magic",
                     "type": "PassThrough",
                     "id": "91bceaff-e1bf-4745-933e-4b0c02d3ca5d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Escape",
+                    "type": "Button",
+                    "id": "62efc327-d9fc-4a6f-b1cb-9aa9aa1b12e6",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
@@ -304,7 +312,18 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
-                    "action": "Blink",
+                    "action": "Magic",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "22e3cd45-4c8f-4c3c-b9d9-05c2668de146",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Escape",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

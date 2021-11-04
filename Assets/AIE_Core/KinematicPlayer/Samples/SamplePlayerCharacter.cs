@@ -46,7 +46,11 @@ public class SamplePlayerCharacter : MonoBehaviour
     public float health = 100;
     public float stamina;
     public float mana;
+
+    [Header("UI References")]
     [SerializeField] HudController hud;
+    [SerializeField]GameObject FistIcon;
+    [SerializeField]GameObject SwordIcon;
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
@@ -54,7 +58,7 @@ public class SamplePlayerCharacter : MonoBehaviour
         mouse = Mouse.current;
     }
     private void Update()
-    {
+    { 
         Vector2 moveInput = playerInput.currentActionMap["Move"].ReadValue<Vector2>();
         
         Vector3 newMovInp = new Vector3(moveInput.x, 0, moveInput.y);
@@ -145,16 +149,20 @@ public class SamplePlayerCharacter : MonoBehaviour
             animator.SetLayerWeight(1, 0);
             animator.SetLayerWeight(2, 1.0f);
             ikHandler.unarmed = false;
+            SwordIcon.SetActive(true);
+            FistIcon.SetActive(false);
         }
         else
         {
             animator.SetLayerWeight(1, 1.0f);
             animator.SetLayerWeight(2, 0);
             ikHandler.unarmed = true;
+            SwordIcon.SetActive(false);
+            FistIcon.SetActive(true);
         }
         sword.SetActive(!sword.activeSelf);
     }
-    void OnBlink(InputValue input)
+    void OnMagic(InputValue input)
     {
         if (mana >= 25)
         {
