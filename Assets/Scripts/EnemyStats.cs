@@ -6,10 +6,9 @@ using UnityEngine.AI;
 public class EnemyStats : MonoBehaviour
 {
     public GameObject player;
-    public int health;
+    public float health;
     [SerializeField] Animator animator;
 
-    public Transform goal;
     private float ranFloat = 0;
     private float counter= 0;
     [HideInInspector] public NavMeshAgent agent;
@@ -21,6 +20,7 @@ public class EnemyStats : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        attacking = false;
         agent = GetComponent<NavMeshAgent>();
         agent.speed = 0;
     }
@@ -30,7 +30,7 @@ public class EnemyStats : MonoBehaviour
     void Update()
     {
         canAttack = !animator.GetBool("Attcking");
-        agent.destination = goal.position;
+        agent.destination = player.transform.position;
         if(health <= 0)
         {
             Destroy(this.gameObject);

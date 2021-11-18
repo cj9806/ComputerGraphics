@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerDetector : MonoBehaviour
 {
-    public EnemyStats[] enemies;
+    public GameObject[] enemies;
     // Start is called before the first frame update
     void Start()
     {
@@ -20,9 +20,10 @@ public class PlayerDetector : MonoBehaviour
     {
         if(other.name == "Player")
         {
-            foreach(EnemyStats enemy in enemies)
+            foreach(GameObject enemy in enemies)
             {
-                enemy.onTheHunt = true;
+                EnemyStats enemyScript = enemy.GetComponent<EnemyStats>();
+                enemyScript.onTheHunt = true;
             }
         }
     }

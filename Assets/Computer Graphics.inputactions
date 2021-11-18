@@ -60,6 +60,14 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "SwitchSpell",
+                    "type": "Button",
+                    "id": "a6ad2e33-0e82-49c1-8a00-d22df7b6c332",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -319,11 +327,22 @@
                 {
                     "name": "",
                     "id": "22e3cd45-4c8f-4c3c-b9d9-05c2668de146",
-                    "path": "",
+                    "path": "<Keyboard>/escape",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "Escape",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a077a768-f871-4d61-bcd7-8e58f5d13d4f",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SwitchSpell",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
