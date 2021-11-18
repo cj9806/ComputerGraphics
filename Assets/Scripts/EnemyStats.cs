@@ -6,7 +6,7 @@ using UnityEngine.AI;
 public class EnemyStats : MonoBehaviour
 {
     public GameObject player;
-    public int health;
+    public float health;
     [SerializeField] Animator animator;
 
     public Transform goal;
