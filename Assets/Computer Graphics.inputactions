@@ -54,9 +54,9 @@
                     "interactions": ""
                 },
                 {
-                    "name": "SwitchSpell",
+                    "name": "Escape",
                     "type": "Button",
-                    "id": "25175846-ee0b-4cd5-8e5e-e66e47826bce",
+                    "id": "62efc327-d9fc-4a6f-b1cb-9aa9aa1b12e6",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
@@ -318,12 +318,12 @@
                 },
                 {
                     "name": "",
-                    "id": "4ede42c0-a1a3-4ff7-8b43-3f4900a2bd6e",
-                    "path": "<Keyboard>/e",
+                    "id": "22e3cd45-4c8f-4c3c-b9d9-05c2668de146",
+                    "path": "",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Keyboard&Mouse",
-                    "action": "SwitchSpell",
+                    "groups": "",
+                    "action": "Escape",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

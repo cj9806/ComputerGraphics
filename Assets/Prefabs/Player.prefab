@@ -2343,25 +2343,21 @@ MonoBehaviour:
   cameraYawRotater: {fileID: 4319130944832289180}
   rotationSpeed: 1
   lookMax: 0
-  camera: {fileID: 4319130945169652366}
   attacking: 0
   sword: {fileID: 5704322524504380793}
   canAttack: 1
   ikHandler: {fileID: 4319130944343285174}
-  punchTarget: {fileID: 0}
+  camera: {fileID: 4319130945169652366}
   maxBlinkDistance: 20
   blinkmask:
     serializedVersion: 2
     m_Bits: 257
-  magicMissle: {fileID: 0}
   health: 100
   stamina: 100
   mana: 100
   hud: {fileID: 202154158}
   FistIcon: {fileID: 1763644950}
   SwordIcon: {fileID: 1205483768}
-  blinkIcon: {fileID: 0}
-  missleIcon: {fileID: 0}
 --- !u!114 &4319130943495982045
 MonoBehaviour:
   m_ObjectHideFlags: 0

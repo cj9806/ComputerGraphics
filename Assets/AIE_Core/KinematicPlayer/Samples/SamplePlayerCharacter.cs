@@ -12,15 +12,12 @@ public class SamplePlayerCharacter : MonoBehaviour
     public Vector3 startingPoint;
     [SerializeField] PlayerInput playerInput;
     // The motor we're controlling
-    [Header("Motor references")]
     public KinematicPlayerMotor motor;
     public ParticleSystem particle;
     public Animator animator;
     public Rigidbody rigidbody;
-    private bool landed;
 
     //mouse contols
-    [Header("Camera Controls")]
     [SerializeField]GameObject cameraPitchRotater;
     public GameObject cameraYawRotater;
     public float rotationSpeed;
@@ -29,27 +26,20 @@ public class SamplePlayerCharacter : MonoBehaviour
     private float minPitch = -26;
     private float maxPitch = 60;
     private Mouse mouse;
-    public Camera camera;
 
-    //attack handling
-    [Header("Attacks")]
     [HideInInspector] public bool attacking;
+    private bool landed;
+
     public GameObject sword;
     [HideInInspector]
     public bool canAttack = true;
     [SerializeField] InverseKinematics ikHandler;
-    [SerializeField] GameObject punchTarget;
-    //magic
-    [Header("Magic")]
+
+    public Camera camera;
     private bool blinkAiming = false;
     private bool blink = false;
     public float maxBlinkDistance;
     public LayerMask blinkmask;
-
-
-    public GameObject magicMissle;
-
-    private bool activeSpell; //true=blink false=magic missle
 
     //player stats
     [Header("Player Stats")]
@@ -61,11 +51,8 @@ public class SamplePlayerCharacter : MonoBehaviour
     [SerializeField] HudController hud;
     [SerializeField]GameObject FistIcon;
     [SerializeField]GameObject SwordIcon;
-    [SerializeField] GameObject blinkIcon;
-    [SerializeField] GameObject missleIcon;
     private void Start()
     {
-        activeSpell = true;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = true;
         mouse = Mouse.current;
@@ -177,39 +164,11 @@ public class SamplePlayerCharacter : MonoBehaviour
     }
     void OnMagic(InputValue input)
     {
-        if (activeSpell)//true is blink is active
+        if (mana >= 25)
         {
-            if (mana >= 25)
-            {
-                if (input.Get<float>() == 1) blinkAiming = true;
-                if (input.Get<float>() == 0) blink = true;
-            }
-        }
-        else
-        {
-            if (mana >= 10 && input.Get<float>() == 0)
-            {
-                
-                GameObject mm = Instantiate(magicMissle);
-                mm.transform.up = camera.transform.forward;
-                mm.transform.position = camera.ViewportToWorldPoint(new Vector3(.5f, .5f, 3.25f));
-                mana -= 10;
-            }
-            
+            if (input.Get<float>() == 1) blinkAiming = true;
+            if (input.Get<float>() == 0) blink = true;
         }
     }
-    void OnSwitchSpell(InputValue input)
-    {
-        activeSpell = !activeSpell;
-        if (activeSpell)
-        {
-            blinkIcon.SetActive(true);
-            missleIcon.SetActive(false);
-        }
-        else
-        {
-            blinkIcon.SetActive(false);
-            missleIcon.SetActive(true);
-        }
-    }
+    
 }
