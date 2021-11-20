@@ -65,7 +65,7 @@ public class KinematicBody : MonoBehaviour
         }
     }
     
-    public Vector3 InternalVelocity { get; private set; }
+    public Vector3 InternalVelocity { get; set; }
     public Vector3 Velocity { get; private set; }
 
     public LayerMask collisionMask;

@@ -5,3 +5,6 @@ dotnet_diagnostic.CS0108.severity = silent
 
 # CS0649: Field 'CombatControls.hCD' is never assigned to, and will always have its default value null
 dotnet_diagnostic.CS0649.severity = none
+
+# IDE0060: Remove unused parameter
+dotnet_code_quality_unused_parameters = all:silent

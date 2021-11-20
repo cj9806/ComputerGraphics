@@ -10,11 +10,7 @@ public class MissleScript : MonoBehaviour
     public LayerMask collisonMask;
 
     private float timer = 0;
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
+    private bool isUsed;
 
     // Update is called once per frame
     void Update()
@@ -26,10 +22,15 @@ public class MissleScript : MonoBehaviour
     }
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("hit");
+        if(isUsed) { return; }
+
+        Debug.Log("hit: " + collision.collider.name);
+        // early exit - we are already destroyed
+
         EnemyStats eStats = collision.gameObject.GetComponentInParent<EnemyStats>();
         if (eStats)
             eStats.health -= damage;
+        isUsed = true;
         Destroy(this.gameObject);
     }
 }

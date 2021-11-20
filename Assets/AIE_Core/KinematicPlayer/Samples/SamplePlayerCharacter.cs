@@ -17,7 +17,6 @@ public class SamplePlayerCharacter : MonoBehaviour
     public ParticleSystem particle;
     public Animator animator;
     public Rigidbody rigidbody;
-    private bool landed;
 
     //mouse contols
     [Header("Camera Controls")]
@@ -56,6 +55,8 @@ public class SamplePlayerCharacter : MonoBehaviour
     public float health = 100;
     public float stamina;
     public float mana;
+    public float manRegenSpeed;
+    public float stamRegenSpeed;
 
     [Header("UI References")]
     [SerializeField] HudController hud;
@@ -94,12 +95,17 @@ public class SamplePlayerCharacter : MonoBehaviour
                 motor.JumpInput();
 
             }
-
-
+            if (transform.position.y < -25)
+            {
+                motor.body.InternalVelocity = Vector3.zero;
+                this.transform.position = startingPoint;                
+            }
+            //check to see if the attack animation is done playing before i can attack again
+            canAttack = !animator.GetBool("Attacking");
             Vector2 lookInput = playerInput.currentActionMap["Look"].ReadValue<Vector2>();
             //rigidbody.rotation = Quaternion.Euler(rigidbody.rotation.eulerAngles + new Vector3(0f, lookInput.x, 0));
             pitchControl = Mathf.Clamp(pitchControl - lookInput.y * rotationSpeed, minPitch, maxPitch);
-            cameraYawRotater.transform.localRotation = cameraYawRotater.transform.localRotation * Quaternion.AngleAxis(lookInput.x, Vector3.up);
+            cameraYawRotater.transform.localRotation = cameraYawRotater.transform.localRotation * Quaternion.AngleAxis(lookInput.x * rotationSpeed, Vector3.up);
             cameraPitchRotater.transform.localRotation = Quaternion.Euler(pitchControl, 0, 0);
 
             //get mouse postition
@@ -110,7 +116,13 @@ public class SamplePlayerCharacter : MonoBehaviour
             {
                 Ray ray = camera.ScreenPointToRay(mouse.position.ReadValue());
                 bool hitGround = Physics.Raycast(ray, out RaycastHit hitInfo, maxBlinkDistance, blinkmask, QueryTriggerInteraction.Ignore);
-                Vector3 blinkPoint;
+                Vector3 blinkPoint;                
+                ParticleSystem.MainModule main = particle.main;
+                if (hitInfo.collider != null)
+                {
+                    main.startColor = Color.green;
+                }
+                else main.startColor = Color.blue;
                 if (hitGround) blinkPoint = ray.origin + ray.direction * hitInfo.distance;
                 else blinkPoint = ray.origin + ray.direction * maxBlinkDistance;
                 particle.transform.position = blinkPoint;
@@ -125,7 +137,7 @@ public class SamplePlayerCharacter : MonoBehaviour
             }
             if (mana < 100)
             {
-                mana += .05f;
+                mana += .05f * manRegenSpeed;
             }
 
             //animation handling
@@ -137,7 +149,7 @@ public class SamplePlayerCharacter : MonoBehaviour
 
             //hupdate stats
             if (stamina < 100)
-                stamina += .025f;
+                stamina += .05f * stamRegenSpeed;
             hud.health = health;
             hud.stamina = stamina;
             hud.mana = mana;
@@ -163,13 +175,7 @@ public class SamplePlayerCharacter : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        if (transform.position.y < -25)
-        {
-            playerInput.transform.position = startingPoint;
-            rigidbody.velocity = Vector3.zero;
-        }
-        //check to see if the attack animation is done playing before i can attack again
-        canAttack = !animator.GetBool("Attacking");
+       
     }
     void OnFire(InputValue input)
     {
@@ -224,7 +230,7 @@ public class SamplePlayerCharacter : MonoBehaviour
                     GameObject mm = Instantiate(magicMissle);
                     mm.transform.up = camera.transform.forward;
                     mm.transform.position = camera.ViewportToWorldPoint(new Vector3(.5f, .5f, 3.25f));
-                    mana -= 10;
+                    mana -= 20;
                 }
 
             }

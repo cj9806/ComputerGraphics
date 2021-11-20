@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class TrophyScript : MonoBehaviour
 {
+    public GameObject[] enemies;
     // Start is called before the first frame update
     void Start()
     {
@@ -17,6 +18,12 @@ public class TrophyScript : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
+        foreach(GameObject enemey in enemies)
+        {
+            if(enemey)
+                return;
+        }
+
         Destroy(this.gameObject);
         other.gameObject.GetComponent<SamplePlayerCharacter>().hasWon = true;
     }

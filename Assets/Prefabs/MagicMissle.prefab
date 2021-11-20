@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 4652708138981583346}
   - component: {fileID: 4652708138981583357}
   - component: {fileID: 890902771091434271}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: MagicMissle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1019,7 +1019,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2be79a3e1ba64fd4ab9ffae012bb30fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lifeTime: 3
+  lifeTime: 1.5
   velocity: 10
   damage: 10
   collisonMask:
@@ -1035,7 +1035,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.12649183
+  m_Radius: 0.14960712
   m_Height: 1.0000001
   m_Direction: 1
   m_Center: {x: -0.1, y: 0.5000001, z: 1.591614e-12}
@@ -1054,7 +1054,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 112
-  m_CollisionDetection: 0
+  m_CollisionDetection: 2
 --- !u!1 &4652708139470633394
 GameObject:
   m_ObjectHideFlags: 0
@@ -1066,7 +1066,7 @@ GameObject:
   - component: {fileID: 4652708139470633395}
   - component: {fileID: 4652708139470633397}
   - component: {fileID: 4652708139470633396}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: GameObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
